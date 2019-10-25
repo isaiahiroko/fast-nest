@@ -7,13 +7,35 @@ A nodejs workspace consisting of [Nest](https://github.com/nestjs/nest), [Fastif
 
 ```bash
 $ git clone https://github.com/isaiahiroko/fast-nest.git project-name
+
+$ cd ./project-name
+
+$ npm install
+
+```
+## Configuration
+
+update ormconfig.json to reflect your environment
+
+```bash
+{
+    "type": "mysql",
+    "host": "localhost",
+    "port": 3306,
+    "username": "test",
+    "password": "test",
+    "database": "test",
+    "entities": [
+        "dist/**/*.entity{.ts,.js}"
+    ],
+    "synchronize": true,
+    "logging": true
+}
 ```
 
 ## Running the app
 
 ```bash
-
-$ cd ./project-name
 
 # development
 $ npm run start
@@ -25,4 +47,4 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## [licensed](LICENSE)
+## [Licensed](LICENSE)
