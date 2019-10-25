@@ -29,7 +29,7 @@ export abstract class CommonController<E extends CommonEntity> {
   }
 
   @Delete(':id/delete')
-  delete(@Param('id') id: string): Observable<boolean> {
+  delete(@Param('id') id: string): Observable<E> {
     return this.service.delete(id);
   }
 

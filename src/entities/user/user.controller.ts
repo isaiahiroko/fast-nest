@@ -3,7 +3,6 @@ import { UserService } from './user.service';
 import { User } from './user.entity';
 import { CommonController } from '../../common/common.controller';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 @Controller('users')
 export class UserController extends CommonController<User>{
@@ -13,12 +12,8 @@ export class UserController extends CommonController<User>{
   }
 
   @Post('create')
-  create(@Body() entity: User): Observable<boolean> {
-    return this.service.create(entity).pipe(
-      map((insertedResult) => {
-        return !!insertedResult.identifiers
-      }),
-    )
+  create(@Body() entity: User): Observable<User> {
+    return this.service.create(entity)
   }
 
 }

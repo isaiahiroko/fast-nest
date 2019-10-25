@@ -12,7 +12,7 @@ export abstract class CommonService<E extends CommonEntity> {
         protected entity: E,
     ) { }
 
-    create(entity: E): Observable<InsertResult> {
+    create(entity: E): Observable<E> {
         return of(null)
     }
 
@@ -25,13 +25,13 @@ export abstract class CommonService<E extends CommonEntity> {
                     if (key == 'q') {
                         let likeQ = []
                         for (const entityKey in this.repository.metadata.propertiesMap) {
-                            if(!['price'].includes(entityKey)){
-                                likeQ = [ ...likeQ, { [entityKey]: Like(`%${value}%`) }]
+                            if (!['price'].includes(entityKey)) {
+                                likeQ = [...likeQ, { [entityKey]: Like(`%${value}%`) }]
                             }
                         }
                         options['where'] = likeQ
                     }
-                    else{
+                    else {
                         try {
                             options[key] = JSON.parse(value)
                         } catch (error) {
@@ -49,8 +49,7 @@ export abstract class CommonService<E extends CommonEntity> {
         return from(this.repository.findOne(id));
     }
 
-    update(id: string, entity: E): Observable<any> {
-        console.log({ entity })
+    update(id: string, entity: E): Observable<E> {
         return this.readOne(id).pipe(
             map((oldEntity) => {
                 for (const key in entity) {
@@ -59,24 +58,20 @@ export abstract class CommonService<E extends CommonEntity> {
                         oldEntity[key] = element
                     }
                 }
-                console.log({ oldEntity })
                 return oldEntity
             }),
             mergeMap((newEntity) => {
-                console.log({ newEntity })
-
                 return from(this.repository.manager.save(newEntity))
+                // return from(this.repository.manager.update<E>(entity, id));
             })
         )
-
-        // return from(this.repository.manager.update<E>(entity, id));
     }
 
-    delete(id: string): Observable<boolean> {
+    delete(id: string): Observable<E> {
         return from(this.repository.delete(id)).pipe(
-            map((deleteResult) => {
-                return !!deleteResult.affected
-            }),
+            mergeMap((deleteResult) => {
+                return this.readOne(id)
+            })
         );
     }
 
